@@ -41,7 +41,7 @@ $col=array("link","shopid","itemid","model","name","stok","brand","harga_discoun
 if(!is_dir($dirName)) mkdir($dirName);
 
 $fp = fopen($dirName.'/import_result.csv', 'a');
-fputcsv($fp, $col);
+fputcsv($fp, $col,';');
 
 
 foreach ($data->items as $k => $v){
@@ -52,8 +52,8 @@ foreach ($data->items as $k => $v){
     $str.="https://shopee.co.id/".str_replace(' ','-',preg_replace('/[^A-Za-z0-9\-\+]/', ' ', $v->name)).".".$v->shopid.".".$v->itemid;
     $str.="^#".$v->shopid;
     $str.="^#".$v->itemid;
-    $str.="^#".$v->tier_variations[0]->name;
-    $str.="^#".$v->name;
+    $str.="^#".cleanText($v->tier_variations[0]->name);
+    $str.="^#".cleanText($v->name);
     $str.="^#".$v->stock;
     $str.="^#".$v->brand;
     $str.="^#".$v->price/100000;
@@ -100,7 +100,7 @@ foreach ($data->items as $k => $v){
     //$result=[];
     $str=explode("^#",$str);
     //array_push($result,$str);
-    fputcsv($fp, $str);
+    fputcsv($fp, cleanText($str),";");
 }
 $zip = new ZipArchive;
 if ($zip->open($dirName.'.zip', ZipArchive::CREATE) === TRUE)
@@ -196,5 +196,9 @@ function getProduk($idToko,$groupBy='pop',$category=null,$newest=0,$limit=30){
     // mengembalikan hasil curl
 //    echo json_encode($output,  JSON_PRETTY_PRINT);
 }
-
+function cleanText($str){
+    $keyword=[','];
+    $replace=['.'];
+    return str_replace($keyword,$replace,$str);
+}
 ?>
