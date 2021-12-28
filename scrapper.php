@@ -127,10 +127,10 @@ class Scrapper{
         */                               // wait for the element with this css class until appear in DOM
        // print_r($result);
     }
-    public function toCSV(){
+    public function toCSV($fileName='import_result.csv'){
 
         $row=array();
-        $fp = fopen($this->resultPath.'/import_result.csv', 'a');
+        $fp = fopen($this->resultPath.'/'.$fileName, 'a');
 
         foreach($this->result as $i =>$k){
             if($i==0)  fputcsv($fp, array_keys($k),";");
